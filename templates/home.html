@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<section id="hero" class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">أهلاً بك في المدونة العصرية</h1>
+        <p class="lead mb-4 mx-auto" style="max-width: 700px;">
+            {% if college.description %}
+            {{ college.description }}
+            {% else %}
+            المدونة العصرية هي منصة رقمية تابعة للكلية العصرية – كلية مجتمع، تهدف إلى تقديم مقالات علمية ومعرفية في
+            مجالات التقنية، الأمن السيبراني، الذكاء الاصطناعي، الجرافكس، التسويق وغيرها، بلغة عربية مبسطة وعصرية.
+            {% endif %}
+        </p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="#about-blog" class="btn btn-light btn-lg px-4">عن المدونة</a>
+            <a href="#about-college" class="btn btn-outline-light btn-lg px-4">عن الكلية العصرية</a>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Access -->
+<div class="container mt-5">
+    <div class="row text-center g-4">
+        <div class="col-md-4">
+            <a href="#popular" class="text-decoration-none">
+                <div class="card h-100 py-4 bg-light">
+                    <div class="card-body">
+                        <h3 class="h5 text-primary">🔥 الأكثر رواجاً</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#latest" class="text-decoration-none">
+                <div class="card h-100 py-4 bg-light">
+                    <div class="card-body">
+                        <h3 class="h5 text-primary">🕒 أحدث المقالات</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#students-posts" class="text-decoration-none">
+                <div class="card h-100 py-4 bg-light">
+                    <div class="card-body">
+                        <h3 class="h5 text-primary">🎓 مقالات لطلاب الكلية</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Tabs -->
+<section id="categories-tabs" class="py-5">
+    <div class="container">
+        <h2 class="mb-4 text-center fw-bold">استكشف مقالات المدونة حسب الفئة</h2>
+
+        <ul class="nav nav-tabs justify-content-center mb-4" id="categoryTabs" role="tablist">
+            {% for item in categories_with_subs %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if forloop.first %}active{% endif %}" id="tab-{{ item.main.id }}"
+                    data-bs-toggle="tab" data-bs-target="#content-{{ item.main.id }}" type="button" role="tab"
+                    aria-controls="content-{{ item.main.id }}"
+                    aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                    {{ item.main.name }}
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content" id="categoryTabsContent">
+            {% for item in categories_with_subs %}
+            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="content-{{ item.main.id }}"
+                role="tabpanel" aria-labelledby="tab-{{ item.main.id }}">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h5 class="text-muted">الأقسام الفرعية:</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for sub in item.subs %}
+                            <a href="{% url 'category_list' sub.slug %}"
+                                class="badge bg-secondary text-decoration-none p-2">{{ sub.name }}</a>
+                            {% empty %}
+                            <span class="text-muted small">لا توجد أقسام فرعية</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    {% for post in item.posts %}
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title h6"><a href="{% url 'post_detail' post.slug %}"
+                                        class="text-decoration-none text-dark">{{ post.title }}</a></h5>
+                                <p class="card-text small text-muted">{{ post.excerpt|truncatechars:80 }}</p>
+                            </div>
+                            <div class="card-footer bg-transparent border-top-0">
+                                <small class="text-muted">{{ post.created_at|date:"d M Y" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-4">
+                        <p class="text-muted">لا توجد مقالات في هذا القسم حالياً.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'category_list' item.main.slug %}" class="btn btn-outline-primary btn-sm">عرض المزيد
+                        في {{ item.main.name }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Popular Posts -->
+<section id="popular" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 text-center fw-bold">المقالات الأكثر تفاعلاً</h2>
+        <div class="row g-4">
+            {% for post in popular_posts %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'post_detail' post.slug %}"
+                                class="text-decoration-none text-dark">{{ post.title }}</a></h5>
+                        <p class="card-text text-muted">{{ post.excerpt|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-muted"><i class="bi bi-eye"></i> {{ post.views }} مشاهدة</small>
+                            <small class="text-muted">بواسطة: {{ post.created_by.username }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">لا توجد مقالات شائعة حالياً.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest Posts -->
+<section id="latest" class="py-5">
+    <div class="container">
+        <h2 class="mb-4 text-center fw-bold">أحدث المقالات المضافة</h2>
+        <div class="row g-4">
+            {% for post in latest_posts %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <span class="badge bg-info text-dark mb-2">{{ post.category.name }}</span>
+                        <h5 class="card-title"><a href="{% url 'post_detail' post.slug %}"
+                                class="text-decoration-none text-dark">{{ post.title }}</a></h5>
+                        <p class="card-text text-muted small">{{ post.excerpt|truncatechars:100 }}</p>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ post.created_at|date:"d M Y" }}</small>
+                        <small class="text-muted">{{ post.created_by.username }}</small>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">لا توجد مقالات حديثة.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Student Posts -->
+<section id="students-posts" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 text-center fw-bold">مقالات خاصة بطلاب الكلية العصرية</h2>
+        <div class="row g-4">
+            {% for post in student_posts %}
+            <div class="col-md-4">
+                <div class="card h-100 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        خاص بالطلاب
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'post_detail' post.slug %}"
+                                class="text-decoration-none text-dark">{{ post.title }}</a></h5>
+                        <p class="card-text">{{ post.excerpt|truncatechars:100 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">لا توجد مقالات خاصة بالطلاب حالياً.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

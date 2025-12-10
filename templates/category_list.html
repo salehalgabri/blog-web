@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category.name }} - المدونة العصرية{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">الرئيسية</a></li>
+                    {% if category.parent %}
+                    <li class="breadcrumb-item"><a href="{% url 'category_list' category.parent.slug %}">{{
+                            category.parent.name }}</a></li>
+                    {% endif %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+                </ol>
+            </nav>
+            <h1 class="display-5 fw-bold">{{ category.name }}</h1>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">{{ post.category.name }}</span>
+                    <h5 class="card-title"><a href="{% url 'post_detail' post.slug %}"
+                            class="text-decoration-none text-dark">{{ post.title }}</a></h5>
+                    <p class="card-text text-muted">{{ post.excerpt|truncatechars:120 }}</p>
+                </div>
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                    <small class="text-muted">{{ post.created_at|date:"d M Y" }}</small>
+                    <small class="text-muted"><i class="bi bi-eye"></i> {{ post.views }}</small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="lead text-muted">لا توجد مقالات في هذا التصنيف حتى الآن.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">العودة للرئيسية</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

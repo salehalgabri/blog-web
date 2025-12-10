@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}كل الأقسام - المدونة العصرية{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">تصفح حسب القسم</h1>
+        <p class="text-muted">استكشف جميع التصنيفات والمواضيع المتاحة في المدونة</p>
+    </div>
+
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        {% if category.icon %}
+                        <span class="fs-2 me-2">{{ category.icon }}</span>
+                        {% else %}
+                        <i class="bi bi-folder2-open fs-2 text-primary me-2"></i>
+                        {% endif %}
+                        <h3 class="h4 mb-0"><a href="{% url 'category_list' category.slug %}"
+                                class="text-decoration-none text-dark stretched-link">{{ category.name }}</a></h3>
+                    </div>
+
+                    {% if category.subcategories.all %}
+                    <hr>
+                    <ul class="list-unstyled mb-0">
+                        {% for sub in category.subcategories.all %}
+                        <li class="mb-2">
+                            <a href="{% url 'category_list' sub.slug %}"
+                                class="text-decoration-none text-secondary d-flex align-items-center">
+                                <i class="bi bi-chevron-left small me-2"></i>
+                                {{ sub.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted small mb-0">لا توجد أقسام فرعية</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="lead text-muted">لا توجد تصنيفات مضافة حالياً.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

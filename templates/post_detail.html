@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title }} - المدونة العصرية{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Post Header -->
+            <div class="mb-4">
+                <span class="badge bg-primary mb-2">{{ post.category.name }}</span>
+                <h1 class="fw-bold mb-3">{{ post.title }}</h1>
+                <div class="text-muted d-flex gap-3 align-items-center">
+                    <span><i class="bi bi-person"></i> {{ post.created_by.username }}</span>
+                    <span><i class="bi bi-calendar"></i> {{ post.created_at|date:"d M Y" }}</span>
+                    <span><i class="bi bi-eye"></i> {{ post.views }} مشاهدة</span>
+                </div>
+            </div>
+
+            <!-- Post Content -->
+            <article class="blog-post mb-5">
+                {{ post.content|linebreaks }}
+            </article>
+
+            <hr>
+
+            <!-- Comments Section -->
+            <section class="mt-5">
+                <h3 class="mb-4">التعليقات ({{ comments.count }})</h3>
+
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">أضف تعليقاً</h5>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.content }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">إرسال التعليق</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    لتتمكن من إضافة تعليق، يرجى <a href="{% url 'login' %}?next={{ request.path }}"
+                        class="alert-link">تسجيل الدخول</a>.
+                </div>
+                {% endif %}
+
+                <!-- Comments List -->
+                <div class="comments-list">
+                    {% for comment in comments %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="fw-bold mb-0">{{ comment.user.username }}</h6>
+                                <small class="text-muted">{{ comment.created_at|timesince }} مضت</small>
+                            </div>
+                            <p class="card-text">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">لا توجد تعليقات بعد. كن أول من يعلق!</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
