@@ -10,8 +10,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'home' %}">الرئيسية</a></li>
                     {% if category.parent %}
-                    <li class="breadcrumb-item"><a href="{% url 'category_list' category.parent.slug %}">{{
-                            category.parent.name }}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'category_list' category.parent.slug %}">{{category.parent.name }}</a></li>
                     {% endif %}
                     <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
                 </ol>

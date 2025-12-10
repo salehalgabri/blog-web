@@ -24,6 +24,13 @@
         body {
             font-family: 'Cairo', sans-serif;
             background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
         }
 
         .navbar-brand {
@@ -75,18 +82,18 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'home' %}">الرئيسية</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about-blog">عن المدونة</a>
+                        <a class="nav-link" href="{% url 'about' %}">عن المدونة</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#categories-tabs">الأقسام</a>
+                        <a class="nav-link" href="{% url 'all_categories' %}">الأقسام</a>
                     </li>
                 </ul>
 
-                <!-- Search Form -->
+                <!-- Search Form
                 <form class="d-flex ms-3" role="search">
                     <input class="form-control me-2" type="search" placeholder="بحث..." aria-label="Search">
                     <button class="btn btn-outline-light" type="submit">بحث</button>
-                </form>
+                </form> -->
 
                 <!-- Auth Links -->
                 <ul class="navbar-nav">
@@ -141,7 +148,7 @@
     <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">جميع الحقوق محفوظة &copy; 2024 المدونة العصرية - الكلية العصرية الجامعية</p>
+            <p class="mb-0">جميع الحقوق محفوظة &copy; 2024 المدونة العصرية - الكلية العصرية </p>
         </div>
     </footer>
 
