@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class College(models.Model):
     name = models.CharField(max_length=200, verbose_name="اسم الكلية")
@@ -29,8 +30,8 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=200, verbose_name="عنوان المقال")
     slug = models.SlugField(unique=True, allow_unicode=True, verbose_name="الرابط المختصر")
-    content = models.TextField(verbose_name="المحتوى")
-    excerpt = models.TextField(max_length=500, verbose_name="مقتطف")
+    content = RichTextUploadingField(verbose_name="المحتوى")
+    excerpt = models.TextField(max_length=500, verbose_name="وصف المقال ")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts', verbose_name="التصنيف")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name="الكاتب")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الإنشاء")

@@ -19,7 +19,7 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'content', 'excerpt', 'category', 'is_for_students']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10}),
+            # 'content' widget removed to allow RichTextUploadingField to use its default widget
             'excerpt': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'is_for_students': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
