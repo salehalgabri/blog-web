@@ -2,6 +2,10 @@
 {% load static %}
 {% block title %}{{ category.name }} - المدونة العصرية{% endblock %}
 
+{% block metaDescription %}
+<meta name="description" content="اقرأ أفضل المقالات والمواضيع في قسم {{ category.name }} على المدونة العصرية. محتوى متميز ومفيد للطلاب والمهتمين بالمجال." />
+{% endblock metaDescription %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row mb-4">
