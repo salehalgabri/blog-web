@@ -118,3 +118,35 @@ def about(request):
 def all_categories(request):
     categories = Category.objects.filter(parent=None)
     return render(request, 'all_categories.html', {'categories': categories})
+
+@login_required
+def my_articles(request):
+    posts = Post.objects.filter(created_by=request.user).order_by('-created_at')
+    categories = Category.objects.all()
+
+    # Filters
+    category_id = request.GET.get('category')
+    audience = request.GET.get('audience')
+    date_filter = request.GET.get('date')
+
+    if category_id:
+        try:
+            category = Category.objects.get(id=category_id)
+            # Include the category itself and all its subcategories
+            subcats = category.subcategories.all()
+            all_cats = [category] + list(subcats)
+            posts = posts.filter(category__in=all_cats)
+        except Category.DoesNotExist:
+            pass # Use default filtering or ignore if category not found
+
+    if audience == 'students':
+        posts = posts.filter(is_for_students=True)
+    
+    if date_filter:
+        posts = posts.filter(created_at__date=date_filter)
+
+    context = {
+        'posts': posts,
+        'categories': categories,
+    }
+    return render(request, 'my_articles.html', context)

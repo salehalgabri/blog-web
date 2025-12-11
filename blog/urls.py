@@ -9,4 +9,5 @@ urlpatterns = [
     path('category/<str:slug>/', views.category_list, name='category_list'),
     path('about/', views.about, name='about'),
     path('categories/', views.all_categories, name='all_categories'),
+    path('my-articles/', views.my_articles, name='my_articles'),
 ]

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}مقالاتي - المدونة العصرية{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold mb-4">مقالاتي</h1>
+            
+            <!-- Filters -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="get" class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label for="category" class="form-label">التصنيف</label>
+                            <select name="category" id="category" class="form-select">
+                                <option value="">الكل</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="audience" class="form-label">الفئة المستهدفة</label>
+                            <select name="audience" id="audience" class="form-select">
+                                <option value="">الكل</option>
+                                <option value="students" {% if request.GET.audience == 'students' %}selected{% endif %}>طلاب</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date" class="form-label">التاريخ</label>
+                            <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-funnel"></i> تصفية
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Articles List -->
+    <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-primary">{{ post.category.name }}</span>
+                        {% if post.is_for_students %}
+                        <span class="badge bg-info text-dark">طلاب</span>
+                        {% endif %}
+                    </div>
+                    {% if not post.is_approved %}
+                    <span class="badge bg-warning text-dark mb-2">قيد المراجعة</span>
+                    {% endif %}
+                    <h5 class="card-title"><a href="{% url 'post_detail' post.slug %}" class="text-decoration-none text-dark stretched-link">{{ post.title }}</a></h5>
+                    <p class="card-text text-muted">{{ post.excerpt|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="bi bi-calendar"></i> {{ post.created_at|date:"Y-m-d" }}</small>
+                    <small class="text-muted"><i class="bi bi-eye"></i> {{ post.views }}</small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-file-earmark-x display-1 text-muted mb-3 d-block"></i>
+            <h3 class="text-muted">لا توجد مقالات</h3>
+            <p class="text-muted">لم تقم بكتابة أي مقالات بعد، أو لا توجد نتائج تطابق بحثك.</p>
+            <a href="{% url 'create_post' %}" class="btn btn-success mt-3">
+                <i class="bi bi-pencil-square"></i> كتابة مقال جديد
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
