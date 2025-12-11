@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import College, Category, Post, Comment
+from .models import College, Category, Post, Comment, PostView
+
+@admin.register(PostView)
+class PostViewAdmin(admin.ModelAdmin):
+    list_display = ('post', 'user', 'session_key', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('post__title', 'user__username', 'session_key')
+
 
 @admin.register(College)
 class CollegeAdmin(admin.ModelAdmin):

@@ -61,3 +61,16 @@ class Comment(models.Model):
         verbose_name = "تعليق"
         verbose_name_plural = "تعليقات"
         ordering = ['-created_at']
+
+class PostView(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_views', verbose_name="المقال")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='post_views', verbose_name="المستخدم")
+    session_key = models.CharField(max_length=40, verbose_name="مفتاح الجلسة", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ المشاهدة")
+
+    def __str__(self):
+        return f"محاولة مشاهدة {self.post.title}"
+
+    class Meta:
+        verbose_name = "مشاهدة"
+        verbose_name_plural = "مشاهدات"

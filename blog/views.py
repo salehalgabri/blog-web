@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.utils.text import slugify
 from django.db.models import Count
-from .models import Post, Category, College
+from .models import Post, Category, College, PostView
 from .forms import PostForm, CommentForm, SignUpForm, Comment
 
 def home(request):
@@ -37,9 +37,23 @@ def home(request):
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
-    # Increment views
-    post.views += 1
-    post.save()
+    # Unique View Counting
+    if request.user.is_authenticated:
+        if not PostView.objects.filter(post=post, user=request.user).exists():
+            PostView.objects.create(post=post, user=request.user)
+            post.views += 1
+            post.save()
+    else:
+        # Anonymous user handling via session
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        
+        if not PostView.objects.filter(post=post, session_key=session_key).exists():
+            PostView.objects.create(post=post, session_key=session_key)
+            post.views += 1
+            post.save()
 
     comments = post.comments.all()
     
