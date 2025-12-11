@@ -103,6 +103,26 @@ def create_post(request):
     
     return render(request, 'post_form.html', {'form': form})
 
+@login_required
+def edit_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    
+    # Check authorization
+    if post.created_by != request.user:
+        return redirect('post_detail', slug=slug) # Or return 403 Forbidden
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.is_approved = False # Reset approval on edit
+            post.save()
+            return redirect('my_articles')
+    else:
+        form = PostForm(instance=post)
+    
+    return render(request, 'post_form.html', {'form': form, 'title': 'تعديل المقال'})
+
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')

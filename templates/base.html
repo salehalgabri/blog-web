@@ -83,13 +83,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">الرئيسية</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" aria-current="page" href="{% url 'home' %}">الرئيسية</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' %}">عن المدونة</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">عن المدونة</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'all_categories' %}">الأقسام</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'all_categories' %}active{% endif %}" href="{% url 'all_categories' %}">الأقسام</a>
                     </li>
                 </ul>
 

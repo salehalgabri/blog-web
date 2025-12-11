@@ -10,4 +10,5 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('categories/', views.all_categories, name='all_categories'),
     path('my-articles/', views.my_articles, name='my_articles'),
+    path('article/<str:slug>/edit/', views.edit_post, name='edit_post'),
 ]
