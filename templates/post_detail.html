@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}{{ post.title }} - المدونة العصرية{% endblock %}
+
+{% block metaDescription %}
+    <meta name="description" content="{{ post.excerpt|truncatechars:160 }}" />
+{% endblock metaDescription %}
+
 
 {% block content %}
 <div class="container py-5">
