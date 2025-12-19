@@ -4,8 +4,22 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.utils.text import slugify
 from django.db.models import Count
-from .models import Post, Category, College, PostView,Status
-from .forms import PostForm, CommentForm, SignUpForm, Comment
+from .models import Post, Category, College, PostView, Status
+from .forms import PostForm, CommentForm, SignUpForm, Comment, UserUpdateForm
+from django.contrib import messages
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'تم تحديث ملفك الشخصي بنجاح!')
+            return redirect('profile')
+    else:
+        form = UserUpdateForm(instance=request.user)
+    
+    return render(request, 'registration/profile.html', {'form': form})
 
 def home(request):
     college = College.objects.first()

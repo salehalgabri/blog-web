@@ -108,6 +108,7 @@
                             مرحباً، {{ user.username }}
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">الملف الشخصي</a></li>
                             <li><a class="dropdown-item" href="{% url 'create_post' %}">إنشاء مقالة جديدة</a></li>
                             <li><a class="dropdown-item" href="{% url 'my_articles' %}">مقالاتي</a></li>
                             {% if user.is_superuser %}
