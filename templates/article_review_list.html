@@ -65,7 +65,7 @@
                         {% for post in posts %}
                         <tr>
                             <td>{{ post.title }}</td>
-                            <td>{{ post.created_by.username }}</td>
+                            <td>{{ post.created_by.get_full_name|default:post.created_by.username }}</td>
                             <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
                             <td><span class="badge bg-secondary">{{ post.category.name }}</span></td>
                             <td>

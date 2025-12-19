@@ -17,7 +17,7 @@
                 <span class="badge bg-primary mb-2">{{ post.category.name }}</span>
                 <h1 class="fw-bold mb-3">{{ post.title }}</h1>
                 <div class="text-muted d-flex gap-3 align-items-center">
-                    <span><i class="bi bi-person"></i> {{ post.created_by.username }}</span>
+                    <span><i class="bi bi-person"></i> {{ post.created_by.get_full_name|default:post.created_by.username }}  </span>
                     <span><i class="bi bi-calendar"></i> {{ post.created_at|date:"d M Y" }}</span>
                     <span><i class="bi bi-eye"></i> {{ post.views }} مشاهدة</span>
                 </div>
@@ -68,7 +68,7 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-2">
-                                <h6 class="fw-bold mb-0">{{ comment.user.username }}</h6>
+                                <h6 class="fw-bold mb-0">{{ comment.user.get_full_name|default:comment.user.username }}</h6>
                                 <small class="text-muted">{{ comment.created_at|timesince }} مضت</small>
                             </div>
                             <p class="card-text">{{ comment.content }}</p>

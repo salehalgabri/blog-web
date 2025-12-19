@@ -138,7 +138,7 @@
                         <p class="card-text text-muted">{{ post.excerpt|truncatechars:100 }}</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <small class="text-muted"><i class="bi bi-eye"></i> {{ post.views }} مشاهدة</small>
-                            <small class="text-muted">بواسطة: {{ post.created_by.username }}</small>
+                            <small class="text-muted">بواسطة: {{ post.created_by.get_full_name|default:post.created_by.username }}</small>
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,7 @@
                     </div>
                     <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                         <small class="text-muted">{{ post.created_at|date:"d M Y" }}</small>
-                        <small class="text-muted">{{ post.created_by.username }}</small>
+                        <small class="text-muted">{{ post.created_by.get_full_name|default:post.created_by.username }}</small>
                     </div>
                 </div>
             </div>
