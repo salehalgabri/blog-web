@@ -243,3 +243,21 @@ def article_review_detail(request, slug):
         return redirect('article_review_list')
         
     return render(request, 'article_review_check.html', {'post': post})
+
+@login_required
+def delete_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    
+    # Check permissions: Author or Superuser
+    if request.user != post.created_by and not request.user.is_superuser:
+        messages.error(request, 'غير مصرح لك بحذف هذا المقال.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'تم حذف المقال بنجاح.')
+        if request.user.is_superuser:
+            return redirect('article_review_list')
+        return redirect('my_articles')
+    
+    return redirect('post_detail', slug=slug)

@@ -22,6 +22,35 @@
                             </button>
                         </div>
                     </form>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bi bi-trash"></i> حذف المقال
+                        </button>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-danger" id="deleteModalLabel"><i class="bi bi-exclamation-triangle-fill"></i> تحذير: حذف المقال</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body font-weight-normal">
+                                    <p>هل أنت متأكد أنك تريد حذف المقال <strong>"{{ post.title }}"</strong> نهائياً؟</p>
+                                    <p class="text-danger fw-bold">لا يمكن التراجع عن هذا الإجراء.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                    <form action="{% url 'delete_post' post.slug %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">نعم، احذف المقال</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <hr>
                     <div class="mb-2">
                         <strong>الكاتب:</strong> {{ post.created_by.get_full_name|default:post.created_by.username }}

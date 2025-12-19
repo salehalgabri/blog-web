@@ -21,11 +21,41 @@
                     <span><i class="bi bi-calendar"></i> {{ post.created_at|date:"d M Y" }}</span>
                     <span><i class="bi bi-eye"></i> {{ post.views }} مشاهدة</span>
                 </div>
-                {% if request.user == post.created_by %}
-                <div class="mt-3">
+               
+                
+                {% if request.user == post.created_by or request.user.is_superuser %}
+                <div class="mt-3 d-flex gap-2">
+                    {% if request.user == post.created_by %}
                     <a href="{% url 'edit_post' post.slug %}" class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-pencil"></i> تعديل المقال
                     </a>
+                    {% endif %}
+                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i> حذف المقال
+                    </button>
+                </div>
+                
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-danger" id="deleteModalLabel"><i class="bi bi-exclamation-triangle-fill"></i> تحذير: حذف المقال</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>هل أنت متأكد أنك تريد حذف المقال <strong>"{{ post.title }}"</strong>؟</p>
+                                <p class="text-danger fw-bold">لا يمكن التراجع عن هذا الإجراء.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                <form action="{% url 'delete_post' post.slug %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">نعم، احذف المقال</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {% endif %}
             </div>
