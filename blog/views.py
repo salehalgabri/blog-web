@@ -122,7 +122,7 @@ def edit_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
     # Check authorization
-    if post.created_by != request.user:
+    if post.created_by != request.user and not request.user.is_superuser:
         return redirect('post_detail', slug=slug) # Or return 403 Forbidden
     
     if request.method == 'POST':
