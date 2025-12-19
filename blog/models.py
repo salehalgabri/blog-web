@@ -62,7 +62,7 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name="المقال")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name="المستخدم")
-    content = models.TextField(verbose_name="التعليق")
+    content = models.TextField(max_length=150,verbose_name="التعليق")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ التعليق")
 
     def __str__(self):
