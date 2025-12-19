@@ -188,8 +188,31 @@ def my_articles(request):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def article_review_list(request):
-    posts = Post.objects.all().order_by('-created_at')  
-    return render(request, 'article_review_list.html', {'posts': posts})
+    posts = Post.objects.all().order_by('-created_at')
+    categories = Category.objects.all()
+
+    # Filters
+    status_filter = request.GET.get('status')
+    category_id = request.GET.get('category')
+    date_filter = request.GET.get('date')
+
+    if status_filter:
+        posts = posts.filter(status=status_filter)
+
+    if category_id:
+        try:
+            # Filter by category and its subcategories
+            category = Category.objects.get(id=category_id)
+            subcats = category.subcategories.all()
+            all_cats = [category] + list(subcats)
+            posts = posts.filter(category__in=all_cats)
+        except Category.DoesNotExist:
+            pass
+
+    if date_filter:
+        posts = posts.filter(created_at__date=date_filter)
+
+    return render(request, 'article_review_list.html', {'posts': posts, 'categories': categories})
 
 
 @login_required
