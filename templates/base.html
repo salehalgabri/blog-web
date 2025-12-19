@@ -110,6 +110,9 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'create_post' %}">إنشاء مقالة جديدة</a></li>
                             <li><a class="dropdown-item" href="{% url 'my_articles' %}">مقالاتي</a></li>
+                            {% if user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'article_review_list' %}">مراجعة المقالات</a></li>
+                            {% endif %}
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

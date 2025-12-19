@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.utils.text import slugify
 from django.db.models import Count
-from .models import Post, Category, College, PostView
+from .models import Post, Category, College, PostView,Status
 from .forms import PostForm, CommentForm, SignUpForm, Comment
 
 def home(request):
@@ -18,12 +18,12 @@ def home(request):
         categories_with_subs.append({
             'main': cat,
             'subs': subcats,
-            'posts': Post.objects.filter(category__in=[cat] + list(subcats), is_approved=True)[:4]
+            'posts': Post.objects.filter(category__in=[cat] + list(subcats), status=Status.APPROVED)[:4]
         })
 
-    popular_posts = Post.objects.filter(is_approved=True).order_by('-views')[:3]
-    latest_posts = Post.objects.filter(is_approved=True).order_by('-created_at')[:6]
-    student_posts = Post.objects.filter(is_approved=True, is_for_students=True)[:3]
+    popular_posts = Post.objects.filter(status=Status.APPROVED).order_by('-views')[:3]
+    latest_posts = Post.objects.filter(status=Status.APPROVED).order_by('-created_at')[:6]
+    student_posts = Post.objects.filter(status=Status.APPROVED, is_for_students=True)[:3]
 
     context = {
         'college': college,
@@ -95,7 +95,7 @@ def create_post(request):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             post.slug = slug
-            post.is_approved = False # Explicitly set to False
+            post.status = Status.PENDING # Explicitly set to Pending
             post.save()
             return redirect('home') # Or redirect to a "pending approval" page
     else:
@@ -115,7 +115,7 @@ def edit_post(request, slug):
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             post = form.save(commit=False)
-            post.is_approved = False # Reset approval on edit
+            post.status = Status.PENDING # Reset approval on edit
             post.save()
             return redirect('my_articles')
     else:
@@ -141,7 +141,7 @@ def category_list(request, slug):
     # Get posts for this category and its children
     subcats = category.subcategories.all()
     all_cats = [category] + list(subcats)
-    posts = Post.objects.filter(category__in=all_cats, is_approved=True)
+    posts = Post.objects.filter(category__in=all_cats, status=Status.APPROVED)
     
     return render(request, 'category_list.html', {'category': category, 'posts': posts})
 
@@ -184,3 +184,25 @@ def my_articles(request):
         'categories': categories,
     }
     return render(request, 'my_articles.html', context)
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def article_review_list(request):
+    posts = Post.objects.all().order_by('-created_at')  
+    return render(request, 'article_review_list.html', {'posts': posts})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def article_review_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'approve':
+            post.status = Status.APPROVED
+        elif action == 'reject':
+            post.status = Status.REJECTED
+        post.save()
+        return redirect('article_review_list')
+        
+    return render(request, 'article_review_check.html', {'post': post})

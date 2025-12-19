@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}مراجعة: {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar / Actions -->
+        <div class="col-lg-3 order-lg-last mb-4">
+            <div class="card shadow-sm sticky-top" style="top: 100px; z-index: 900;">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">إجراءات المراجعة</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-success">
+                                <i class="bi bi-check-lg"></i> اعتماد للنشر
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                <i class="bi bi-x-lg"></i> رفض المقال
+                            </button>
+                        </div>
+                    </form>
+                    <hr>
+                    <div class="mb-2">
+                        <strong>الكاتب:</strong> {{ post.created_by.username }}
+                    </div>
+                    <div class="mb-2">
+                        <strong>تاريخ الإنشاء:</strong> {{ post.created_at|date:"Y-m-d" }}
+                    </div>
+                    <div class="mb-2">
+                        <strong>التصنيف:</strong> {{ post.category.name }}
+                    </div>
+                     <div class="mb-2">
+                        <strong>الحالة الحالية:</strong> {{ post.get_status_display }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 text-center">
+                 <a href="{% url 'article_review_list' %}" class="text-decoration-none text-muted"> <i class="bi bi-arrow-right"></i> عودة للقائمة</a>
+            </div>
+        </div>
+
+        <!-- Article Content -->
+        <div class="col-lg-9">
+            <article class="bg-white p-4 p-md-5 rounded shadow-sm">
+                <h1 class="display-4 fw-bold mb-4">{{ post.title }}</h1>
+                
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded mb-4 w-100" alt="{{ post.title }}">
+                {% endif %}
+
+                <div class="article-content fs-5 lh-lg">
+                    {{ post.content|safe }}
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+{% endblock %}

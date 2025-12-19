@@ -56,9 +56,11 @@
                         <span class="badge bg-info text-dark">طلاب</span>
                         {% endif %}
                     </div>
-                    {% if post.is_approved %}
+                    {% if post.status == 'APPROVED' %}
                     <span class="badge bg-success mb-2">معتمد</span>
-                    {% else %}
+                    {% elif post.status == 'REJECTED' %}
+                    <span class="badge bg-danger mb-2">مرفوض</span>
+                    {% elif post.status == 'PENDING' %}
                     <span class="badge bg-warning text-dark mb-2">قيد المراجعة</span>
                     {% endif %}
                     <h5 class="card-title"><a href="{% url 'post_detail' post.slug %}" class="text-decoration-none text-dark stretched-link">{{ post.title }}</a></h5>

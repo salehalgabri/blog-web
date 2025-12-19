@@ -27,11 +27,16 @@ class Category(models.Model):
         verbose_name = "تصنيف"
         verbose_name_plural = "تصنيفات"
 
+class Status(models.TextChoices):
+    APPROVED = 'APPROVED', 'معتمد للنشر'
+    PENDING = 'PENDING', 'قيد المراجعة'
+    REJECTED = 'REJECTED', 'مرفوض'
+
 class Post(models.Model):
     title = models.CharField(max_length=200, verbose_name="عنوان المقال")
     slug = models.SlugField(unique=True, allow_unicode=True, verbose_name="الرابط المختصر")
     content = RichTextUploadingField(verbose_name="المحتوى")
-    excerpt = models.TextField(max_length=500, verbose_name="وصف المقال ")
+    excerpt = models.TextField(max_length=160, verbose_name="وصف المقال")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts', verbose_name="التصنيف")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name="الكاتب")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الإنشاء")
@@ -39,7 +44,12 @@ class Post(models.Model):
     views = models.PositiveIntegerField(default=0, verbose_name="عدد المشاهدات")
     is_popular = models.BooleanField(default=False, verbose_name="شائع")
     is_for_students = models.BooleanField(default=False, verbose_name="موجه للطلاب")
-    is_approved = models.BooleanField(default=False, verbose_name="معتمد للنشر")
+    status = models.CharField(
+        max_length=20,
+        choices= Status.choices,
+        default= Status.PENDING,
+        verbose_name="الحالة"
+    )
 
     def __str__(self):
         return self.title
