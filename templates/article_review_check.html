@@ -76,10 +76,6 @@
             <article class="bg-white p-4 p-md-5 rounded shadow-sm">
                 <h1 class="display-4 fw-bold mb-4">{{ post.title }}</h1>
                 
-                {% if post.image %}
-                <img src="{{ post.image.url }}" class="img-fluid rounded mb-4 w-100" alt="{{ post.title }}">
-                {% endif %}
-
                 <div class="article-content fs-5 lh-lg">
                     {{ post.content|safe }}
                 </div>
