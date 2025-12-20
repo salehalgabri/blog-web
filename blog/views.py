@@ -51,7 +51,7 @@ def home(request):
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
-    if post.status != Status.APPROVED:
+    if post.status != Status.APPROVED and post.created_by != request.user and not request.user.is_superuser:
         return redirect('home')
     # Unique View Counting
     if request.user.is_authenticated:
