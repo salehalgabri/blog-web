@@ -68,11 +68,12 @@
             <hr>
 
             <!-- Comments Section -->
+            {% if post.status == "APPROVED" %}
             <section class="mt-5">
                 <h3 class="mb-4">التعليقات ({{ comments.count }})</h3>
 
                 <!-- Comment Form -->
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated   %}
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title mb-3">أضف تعليقاً</h5>
@@ -109,6 +110,11 @@
                     {% endfor %}
                 </div>
             </section>
+            {% else %}
+            <div class="alert alert-warning">
+                هذا المقال غير معتمد
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
