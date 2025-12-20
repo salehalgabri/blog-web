@@ -51,6 +51,8 @@ def home(request):
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
+    if post.status != Status.APPROVED:
+        return redirect('home')
     # Unique View Counting
     if request.user.is_authenticated:
         if not PostView.objects.filter(post=post, user=request.user).exists():
