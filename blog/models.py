@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.urls import reverse
 
 class College(models.Model):
     name = models.CharField(max_length=200, verbose_name="اسم الكلية")
@@ -22,6 +23,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('category_list', args=[self.slug])
     
     class Meta:
         verbose_name = "تصنيف"
@@ -53,6 +57,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[self.slug])
 
     class Meta:
         verbose_name = "مقال"

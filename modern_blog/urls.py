@@ -8,6 +8,14 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from ckeditor_uploader import views as ckeditor_views
+from django.contrib.sitemaps.views import sitemap
+from blog.sitemaps import PostSitemap, CategorySitemap, StaticViewSitemap
+
+sitemaps = {
+    'posts': PostSitemap,
+    'categories': CategorySitemap,
+    'static': StaticViewSitemap,
+}   
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -20,5 +28,7 @@ urlpatterns = [
 
     # إبقاء هذا السطر كاحتياط لبقية الملفات (JS/CSS)
     path('ckeditor/', include('ckeditor_uploader.urls')),
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
