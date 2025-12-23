@@ -1,0 +1,20 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /accounts/login/
+Disallow: /signup/
+Disallow: /profile/
+Disallow: /create/
+Disallow: /my-articles/
+Disallow: /article/*/edit/
+Disallow: /post/*/delete/
+Disallow: /ckeditor/
+Disallow: /ckeditor/upload/
+Disallow: /ckeditor/browse/
+
+# (Optional) Block crawling of parameter links unless they are used for important pages:
+Disallow: /*?*
+
+Allow: /
+
+Sitemap: https://saleh2004.pythonanywhere.com/sitemap.xml
